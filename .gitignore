@@ -1,0 +1,9 @@
+# CMake build files
+build/
+
+#compiled executables
+vehicle_simulation_v22
+vehicle_simulation_v23
+
+#Generated simulation output
+simulation_test.csv
