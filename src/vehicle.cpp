@@ -1,9 +1,12 @@
 #include "vehicle.hpp"
+#include <cmath>    // std::cos() std::sin()が使えるようになる
 
 Vehicle::Vehicle(
-    double initial_position,
-    double initial_velocity)
-    : state_{initial_position, initial_velocity}
+    double initial_x,
+        double initial_y,
+        double initial_speed,
+        double initial_heading)
+    : state_{initial_x, initial_y, initial_speed, initial_heading}
     {
 
     }
@@ -12,10 +15,15 @@ void Vehicle::update(const SimulationConfig& config)
 {
     update_position(config.dt);
 
-    update_velocity(
+    update_speed(
         config.acceleration,
         config.dt,
         config.speed_limit
+    );
+
+    update_heading(
+        config.yaw_rate,
+        config.dt
     );
 }
 
@@ -26,19 +34,30 @@ const VehicleState& Vehicle::get_state() const
 
 void Vehicle::update_position(double dt)
 {
-    state_.position = state_.position + state_.velocity * dt;
+    state_.x =
+        state_.x + state_.speed * std::cos(state_.heading) * dt;
+
+    state_.y =
+        state_.y + state_.speed * std::sin(state_.heading) * dt;
 }
 
-void Vehicle::update_velocity(
+void Vehicle::update_speed(
         double acceleration,
         double dt,
         double speed_limit)
 {
-        state_.velocity = state_.velocity + acceleration * dt;
+        state_.speed = state_.speed + acceleration * dt;
 
-    if (state_.velocity > speed_limit)
+    if (state_.speed > speed_limit)
     {
-        state_.velocity = speed_limit;
+        state_.speed = speed_limit;
     }
 
+}
+
+void Vehicle::update_heading(
+        double yaw_rate,
+        double dt)
+{
+    state_.heading = state_.heading + yaw_rate * dt;
 }

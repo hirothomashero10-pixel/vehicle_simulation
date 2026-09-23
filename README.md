@@ -4,10 +4,13 @@ A C++ project for learning vehicle dynamics and control.
 
 ## Current Features
 
-- 1D vehicle motion simulation
+- 2D vehicle motion simulation
 - Acceleration and speed limit
+- Heading update using yaw rate
 - Vehicle class for state management
+- Simulation history using `std::vector<VehicleState>`
 - CSV output
+- SVG trajectory visualization
 - CMake build system
 
 ## Project Structure
@@ -28,7 +31,7 @@ vehicle_simulation/
 Requirements:
 
 - CMake 3.16 or later
-- C++17 compatible compiler
+- C++20 compatible compiler
 
 From the project root directory, run:
 
@@ -70,8 +73,10 @@ simulation_test.csv
 The CSV file contains the following columns:
 
 - `time`: simulation time [s]
-- `position`: vehicle position [m]
-- `velocity`: vehicle velocity [m/s]
+- `x`: vehicle x position [m]
+- `y`: vehicle y position [m]
+- `speed`: vehicle speed [m/s]
+- `heading`: vehicle heading [rad]
 
 ## Roadmap
 
@@ -80,9 +85,10 @@ The CSV file contains the following columns:
 - [x] CSV output
 - [x] CMake build system
 - [x] Git / GitHub setup
-- [ ] 2D vehicle motion model
+- [x] 2D vehicle motion model
+- [x] Simulation history with `std::vector`
+- [x] SVG trajectory visualization
 - [ ] Kinematic bicycle model
 - [ ] PID controller
 - [ ] LQR controller
 - [ ] Model Predictive Control (MPC)
-- [ ] Simulation plots and result visualization

@@ -2,14 +2,14 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <numbers>
 
 #include "vehicle.hpp"
 
 struct SimulationHistory
 {
     std::vector<double> time;
-    std::vector<double> position;
-    std::vector<double> velocity;
+    std::vector<VehicleState> states;
 };
 
 void print_state(
@@ -18,9 +18,11 @@ void print_state(
 {
     std::cout
         << "time = " << time
-        << " s, position = " << state.position
-        << " m, velocity = " << state.velocity
-        << " m/s"
+        << " s, x = " << state.x
+        << " m, y = " << state.y
+        << " m, speed = " << state.speed
+        << " m/s, heading = " << state.heading
+        << " rad"
         << std::endl;
 }
 
@@ -30,18 +32,56 @@ void save_csv(
 {
     std::ofstream file(filename);
 
-    file << "time,position,velocity" << std::endl;
+    file << "time,x,y,speed,heading" << std::endl;
 
     for (std::size_t i = 0; i < history.time.size(); i++)
     {
         file
             << history.time[i] << ","
-            << history.position[i] << ","
-            << history.velocity[i] 
+            << history.states[i].x << ","
+            << history.states[i].y << ","
+            << history.states[i].speed << ","
+            << history.states[i].heading
             << std::endl;
     }
 
     file.close();
+}
+
+void save_svg(
+    const std::string& filename,
+    const SimulationHistory& history)
+{
+    std::ofstream file(filename);
+
+    file << "<svg xmlns=\"http://www.w3.org/2000/svg\""
+         << " width=\"800\" height=\"600\">"
+         << std::endl;
+
+    const double scale = 8.0;
+    const double origin_x = 400.0;
+    const double origin_y = 550.0;
+
+    //polyline の開始
+    file << "<polyline points=\"";
+
+    // 座標を全部追加
+    for (std::size_t i = 0; i < history.states.size(); i++)
+    {
+        double svg_x = origin_x + history.states[i].x * scale;
+        double svg_y = origin_y - history.states[i].y * scale;
+
+        file << svg_x << "," << svg_y << " ";
+    }
+
+    //polyline の終了
+    file << "\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />"
+         << std::endl;
+
+    file << "</svg>" << std::endl;
+
+    file.close();
+
 }
 
 int main()
@@ -49,10 +89,16 @@ int main()
     const SimulationConfig config{
         2.0,
         0.1,
-        10.0
+        10.0,
+        0.2
     };
 
-    Vehicle car(0.0, 0.0);
+    Vehicle car(
+        0.0,    // initial_x
+        0.0,    // initial_y
+        0.0,    // initial_speed
+        std::numbers::pi / 4.0     // initial_heading
+    );
 
     SimulationHistory history;
 
@@ -66,8 +112,7 @@ int main()
         );
 
         history.time.push_back(time);
-        history.position.push_back(state.position);
-        history.velocity.push_back(state.velocity);
+        history.states.push_back(state);
             
         car.update(config);
     
@@ -77,6 +122,13 @@ int main()
 
     save_csv(
         filename,
+        history
+    );
+
+    const std::string svg_filename = "trajectory.svg";
+
+    save_svg(
+        svg_filename,
         history
     );
 

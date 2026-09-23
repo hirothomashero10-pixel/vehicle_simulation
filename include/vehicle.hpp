@@ -2,8 +2,10 @@
 
 struct VehicleState
 {
-    double position;
-    double velocity;
+    double x;
+    double y;
+    double speed;
+    double heading;
 };
 
 struct SimulationConfig
@@ -11,12 +13,18 @@ struct SimulationConfig
     double acceleration;
     double dt;
     double speed_limit;
+    double yaw_rate;
 };
 
 class Vehicle
 {
 public:
-    Vehicle(double initial_position, double initial_velocity);
+    Vehicle(
+        double initial_x,
+        double initial_y,
+        double initial_speed,
+        double initial_heading
+    );
 
     void update(const SimulationConfig& config);
 
@@ -27,8 +35,13 @@ private:
 
     void update_position(double dt);
 
-    void update_velocity(
+    void update_speed(
         double acceleration,
         double dt,
         double speed_limit);
+
+    void update_heading(
+        double yaw_rate,
+        double dt
+    );
 };
