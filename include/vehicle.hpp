@@ -13,7 +13,8 @@ struct SimulationConfig
     double acceleration;
     double dt;
     double speed_limit;
-    double yaw_rate;
+    double steering_angle;
+    double wheelbase;
 };
 
 class Vehicle
@@ -41,7 +42,8 @@ private:
         double speed_limit);
 
     void update_heading(
-        double yaw_rate,
+        double steering_angle,
+        double wheelbase,
         double dt
     );
 };

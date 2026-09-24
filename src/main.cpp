@@ -75,7 +75,7 @@ void save_svg(
     }
 
     //polyline の終了
-    file << "\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />"
+    file << "\" fill=\"none\" stroke=\"white\" stroke-width=\"2\" />"
          << std::endl;
 
     file << "</svg>" << std::endl;
@@ -87,10 +87,11 @@ void save_svg(
 int main()
 {
     const SimulationConfig config{
-        2.0,
-        0.1,
-        10.0,
-        0.2
+        2.0,        // acceleration [m/s^2]
+        0.1,        // dt [s]
+        10.0,       //speed_limit [m/s]
+        0.1,        // steering_angle [rad]
+        2.5         // wheelbase [m]
     };
 
     Vehicle car(

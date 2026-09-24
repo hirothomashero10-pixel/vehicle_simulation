@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 project(vehicle_simulation LANGUAGES CXX)
 
 # 実行ファイル名をここで一括管理
-set(TARGET_NAME vehicle_simulation_v27)
+set(TARGET_NAME vehicle_simulation_v28)
 
 add_executable(
     ${TARGET_NAME}

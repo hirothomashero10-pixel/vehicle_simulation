@@ -1,5 +1,5 @@
 #include "vehicle.hpp"
-#include <cmath>    // std::cos() std::sin()が使えるようになる
+#include <cmath>    // std::cos() std::sin() std::tan()が使えるようになる
 
 Vehicle::Vehicle(
     double initial_x,
@@ -22,7 +22,8 @@ void Vehicle::update(const SimulationConfig& config)
     );
 
     update_heading(
-        config.yaw_rate,
+        config.steering_angle,
+        config.wheelbase,
         config.dt
     );
 }
@@ -56,8 +57,12 @@ void Vehicle::update_speed(
 }
 
 void Vehicle::update_heading(
-        double yaw_rate,
+        double steering_angle,
+        double wheelbase,
         double dt)
 {
+    double yaw_rate =
+        state_.speed / wheelbase * std::tan(steering_angle);
+
     state_.heading = state_.heading + yaw_rate * dt;
 }
